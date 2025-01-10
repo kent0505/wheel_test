@@ -1,0 +1,38 @@
+name: wheel_test
+description: "A new Flutter project."
+publish_to: 'none'
+version: 1.0.0+1
+environment:
+  sdk: ^3.6.0
+dependencies:
+  flutter:
+    sdk: flutter
+  cupertino_icons: ^1.0.8
+  ###
+  flutter_bloc: ^8.1.6
+  shared_preferences: ^2.3.3
+  flutter_svg: ^2.0.16
+  intl: ^0.20.1
+  ###
+dev_dependencies:
+  flutter_test:
+    sdk: flutter
+  flutter_lints: ^5.0.0
+flutter:
+  uses-material-design: true
+  assets:
+    - assets/
+    - assets/fonts/
+  fonts:
+    - family: w400
+      fonts:
+        - asset: assets/fonts/Poppins-Regular.ttf
+    - family: w600
+      fonts:
+        - asset: assets/fonts/Poppins-SemiBold.ttf
+    - family: w700
+      fonts:
+        - asset: assets/fonts/Poppins-Bold.ttf
+    - family: w800
+      fonts:
+        - asset: assets/fonts/Poppins-ExtraBold.ttf
