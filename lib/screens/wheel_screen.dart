@@ -1,7 +1,11 @@
+import 'dart:math';
+
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
 import '../blocs/money/money_bloc.dart';
+import '../blocs/wheel/wheel_bloc.dart';
+import '../core/utils.dart';
 import '../widgets/main_button.dart';
 import '../widgets/my_button.dart';
 import '../widgets/svg_widget.dart';
@@ -17,6 +21,105 @@ class WheelScreen extends StatefulWidget {
 
 class _WheelScreenState extends State<WheelScreen> {
   final controller = TextEditingController();
+  int activeBonus = 0;
+  double turns = 0.0;
+  double angle = 0;
+  String asset = '';
+  bool canSpin = true;
+
+  List<double> angles = [
+    1, // 5 0
+    2, // 15 1
+    3, // 15 2
+    4, // 5 3
+    5, // 50 4
+    7, // 55 5
+    12, // 25 6
+    14, // 10 7
+    15, // 150 8
+    16, // 20 9
+    19, // 1 10
+    21, // 500 11
+  ];
+
+  int getCoins() {
+    asset = '';
+    if (angle == 1) return 5;
+    if (angle == 2) return 15;
+    if (angle == 3) return 15;
+    if (angle == 4) return 5;
+    if (angle == 5) return 50;
+    if (angle == 7) return 55;
+    if (angle == 12) return 25;
+    if (angle == 14) return 10;
+    if (angle == 15) return 150;
+    if (angle == 16) return 20;
+    if (angle == 19) return 1;
+    if (angle == 21) return 500;
+    return 0;
+  }
+
+  void getRandom() {
+    Random random = Random();
+    int randomIndex = random.nextInt(angles.length);
+    Future.delayed(const Duration(seconds: 3), () {
+      setState(() {
+        angle = angles[randomIndex];
+        logger(angle);
+      });
+    });
+  }
+
+  void onSpin() async {
+    setState(() {
+      turns += 5 / 1;
+      canSpin = false;
+    });
+    getRandom();
+    await Future.delayed(const Duration(seconds: 7), () async {
+      logger(getCoins());
+
+      Future.delayed(const Duration(seconds: 2), () {
+        if (mounted) {
+          // context.read<HomeBloc>().add(GetCoinsEvent());
+          // showDialog(
+          //   context: context,
+          //   barrierDismissible: false,
+          //   builder: (context) {
+          //     return WinDialog(
+          //       amount: getCoins(),
+          //     );
+          //   },
+          // );
+        }
+      });
+    });
+  }
+
+  void onBonus(int value) {
+    setState(() {
+      activeBonus = value;
+    });
+  }
+
+  void onAdd(int value) {
+    setState(() {
+      int amount = int.tryParse(controller.text) ?? 0;
+      amount += value;
+      controller.text = amount.toString();
+    });
+  }
+
+  // void onSpin() {
+  //   context.read<WheelBloc>().add(StartWheel(bonus: activeBonus));
+  // }
+
+  void onClear() {
+    setState(() {
+      activeBonus = 0;
+      controller.clear();
+    });
+  }
 
   @override
   void dispose() {
@@ -30,7 +133,13 @@ class _WheelScreenState extends State<WheelScreen> {
       padding: EdgeInsets.zero,
       children: [
         SizedBox(height: 20),
-        WheelCard(),
+        BlocBuilder<MoneyBloc, MoneyState>(
+          builder: (context, state) {
+            return WheelCard(
+              id: state is MoneyLoaded ? state.wheel : 1,
+            );
+          },
+        ),
         SizedBox(height: 6),
         BlocBuilder<MoneyBloc, MoneyState>(
           builder: (context, state) {
@@ -40,20 +149,23 @@ class _WheelScreenState extends State<WheelScreen> {
                   SizedBox(width: 16),
                   _Action(
                     id: 1,
-                    amound: state.item1,
-                    onPressed: () {},
+                    amound: state.bonus1,
+                    activeBonus: activeBonus,
+                    onPressed: onBonus,
                   ),
                   SizedBox(width: 6),
                   _Action(
                     id: 2,
-                    amound: state.item2,
-                    onPressed: () {},
+                    amound: state.bonus2,
+                    activeBonus: activeBonus,
+                    onPressed: onBonus,
                   ),
                   SizedBox(width: 6),
                   _Action(
                     id: 3,
-                    amound: state.item3,
-                    onPressed: () {},
+                    amound: state.bonus3,
+                    activeBonus: activeBonus,
+                    onPressed: onBonus,
                   ),
                   SizedBox(width: 16),
                 ],
@@ -95,30 +207,48 @@ class _WheelScreenState extends State<WheelScreen> {
           ),
         ),
         SizedBox(height: 16),
-        TxtField(
-          controller: controller,
-          hintText: '100',
+        BlocBuilder<MoneyBloc, MoneyState>(
+          builder: (context, state) {
+            if (state is MoneyLoaded) {
+              return TxtField(
+                controller: controller,
+                hintText: '100',
+                money: state.money,
+                onPressed: onAdd,
+              );
+            }
+            return Container();
+          },
         ),
         SizedBox(height: 6),
-        MainButton(
-          title: 'Place Bet',
-          margin: 16,
-          onPressed: () {},
+        BlocBuilder<WheelBloc, WheelState>(
+          builder: (context, state) {
+            return MainButton(
+              title: 'Place Bet',
+              margin: 16,
+              isActive: state is! WheelSpinning,
+              onPressed: onSpin,
+            );
+          },
         ),
         SizedBox(height: 10),
-        MyButton(
-          onPressed: () {},
-          minSize: 52,
-          child: Center(
-            child: Text(
-              'Clear All',
-              style: TextStyle(
-                color: Color(0xffE10606),
-                fontSize: 16,
-                fontFamily: 'w600',
+        BlocBuilder<WheelBloc, WheelState>(
+          builder: (context, state) {
+            return MyButton(
+              onPressed: state is WheelSpinning ? null : onClear,
+              minSize: 52,
+              child: Center(
+                child: Text(
+                  'Clear All',
+                  style: TextStyle(
+                    color: Color(0xffE10606),
+                    fontSize: 16,
+                    fontFamily: 'w600',
+                  ),
+                ),
               ),
-            ),
-          ),
+            );
+          },
         ),
         SizedBox(height: 90),
       ],
@@ -130,22 +260,29 @@ class _Action extends StatelessWidget {
   const _Action({
     required this.id,
     required this.amound,
+    required this.activeBonus,
     required this.onPressed,
   });
 
   final int id;
   final int amound;
-  final void Function() onPressed;
+  final int activeBonus;
+  final void Function(int) onPressed;
 
   @override
   Widget build(BuildContext context) {
     return Expanded(
       child: MyButton(
-        onPressed: onPressed,
-        child: Container(
+        onPressed: activeBonus == id
+            ? null
+            : () {
+                onPressed(id);
+              },
+        child: AnimatedContainer(
+          duration: Duration(milliseconds: 300),
           height: 52,
           decoration: BoxDecoration(
-            color: Color(0xff040404),
+            color: activeBonus == id ? Color(0xffA3C317) : Color(0xff040404),
             borderRadius: BorderRadius.circular(20),
             border: Border.all(
               width: 2,
@@ -155,7 +292,12 @@ class _Action extends StatelessWidget {
           child: Row(
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
-              SvgWidget('assets/action$id.svg'),
+              SvgWidget(
+                'assets/store$id.svg',
+                color:
+                    activeBonus == id ? Color(0xffEFEFEF) : Color(0xff676179),
+                height: 24,
+              ),
               SizedBox(width: 10),
               Text(
                 amound.toString(),

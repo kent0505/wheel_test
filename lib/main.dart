@@ -4,6 +4,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 
 import 'blocs/menu/menu_bloc.dart';
 import 'blocs/money/money_bloc.dart';
+import 'blocs/wheel/wheel_bloc.dart';
 import 'core/themes.dart';
 import 'screens/splash_screen.dart';
 
@@ -25,6 +26,7 @@ class MyApp extends StatelessWidget {
       providers: [
         BlocProvider(create: (context) => MenuBloc()),
         BlocProvider(create: (context) => MoneyBloc()..add(LoadMoney())),
+        BlocProvider(create: (context) => WheelBloc()),
       ],
       child: MaterialApp(
         debugShowCheckedModeBanner: false,

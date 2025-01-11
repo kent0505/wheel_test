@@ -10,11 +10,15 @@ class TxtField extends StatelessWidget {
     required this.controller,
     required this.hintText,
     this.length = 6,
+    required this.money,
+    required this.onPressed,
   });
 
   final TextEditingController controller;
   final String hintText;
   final int length;
+  final int money;
+  final void Function(int) onPressed;
 
   @override
   Widget build(BuildContext context) {
@@ -82,17 +86,24 @@ class TxtField extends StatelessWidget {
                   SizedBox(width: 5),
                   _Button(
                     title: '+10',
-                    onPressed: () {},
+                    onPressed: () {
+                      onPressed(10);
+                    },
                   ),
                   SizedBox(width: 3),
                   _Button(
                     title: '+100',
-                    onPressed: () {},
+                    onPressed: () {
+                      onPressed(100);
+                    },
                   ),
                   SizedBox(width: 3),
                   _Button(
                     title: 'All',
-                    onPressed: () {},
+                    onPressed: () {
+                      int amount = int.tryParse(controller.text) ?? 0;
+                      onPressed(money - amount);
+                    },
                   ),
                   SizedBox(width: 5),
                 ],
