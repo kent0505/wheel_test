@@ -240,23 +240,29 @@ class _Wheel extends StatelessWidget {
                           : 'Get for \$${formatNumber(price)}',
                       isActive: !selected,
                       onPressed: () {
-                        state is MoneyLoaded && state.money >= price
-                            ? context.read<MoneyBloc>().add(bought
-                                ? SelectWheel(id: id)
-                                : BuyWheel(id: id, price: price))
-                            : showDialog(
-                                context: context,
-                                builder: (context) {
-                                  return DialogWidget(
-                                    title: 'Not Enough Funds',
-                                    description:
-                                        'You don’t have enough money for this purchase. But no worries! Watch a quick ad and get \$500 for free to keep going!',
-                                    buttonTitle: 'Watch',
-                                    buttonColor: Color(0xff0A84FF),
-                                    onPressed: () {},
-                                  );
-                                },
-                              );
+                        if (bought) {
+                          context.read<MoneyBloc>().add(SelectWheel(id: id));
+                        } else {
+                          if (state is MoneyLoaded && state.money >= price) {
+                            context
+                                .read<MoneyBloc>()
+                                .add(BuyWheel(id: id, price: price));
+                          } else {
+                            showDialog(
+                              context: context,
+                              builder: (context) {
+                                return DialogWidget(
+                                  title: 'Not Enough Funds',
+                                  description:
+                                      'You don’t have enough money for this purchase. But no worries! Watch a quick ad and get \$500 for free to keep going!',
+                                  buttonTitle: 'Watch',
+                                  buttonColor: Color(0xff0A84FF),
+                                  onPressed: () {},
+                                );
+                              },
+                            );
+                          }
+                        }
                       },
                     );
                   },

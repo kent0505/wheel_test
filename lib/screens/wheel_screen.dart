@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 
+import '../blocs/money/money_bloc.dart';
 import '../widgets/main_button.dart';
 import '../widgets/my_button.dart';
 import '../widgets/svg_widget.dart';
@@ -30,28 +32,36 @@ class _WheelScreenState extends State<WheelScreen> {
         SizedBox(height: 20),
         WheelCard(),
         SizedBox(height: 6),
-        Row(
-          children: [
-            SizedBox(width: 16),
-            _Action(
-              id: 1,
-              amound: 1,
-              onPressed: () {},
-            ),
-            SizedBox(width: 6),
-            _Action(
-              id: 2,
-              amound: 1,
-              onPressed: () {},
-            ),
-            SizedBox(width: 6),
-            _Action(
-              id: 3,
-              amound: 1,
-              onPressed: () {},
-            ),
-            SizedBox(width: 16),
-          ],
+        BlocBuilder<MoneyBloc, MoneyState>(
+          builder: (context, state) {
+            if (state is MoneyLoaded) {
+              return Row(
+                children: [
+                  SizedBox(width: 16),
+                  _Action(
+                    id: 1,
+                    amound: state.item1,
+                    onPressed: () {},
+                  ),
+                  SizedBox(width: 6),
+                  _Action(
+                    id: 2,
+                    amound: state.item2,
+                    onPressed: () {},
+                  ),
+                  SizedBox(width: 6),
+                  _Action(
+                    id: 3,
+                    amound: state.item3,
+                    onPressed: () {},
+                  ),
+                  SizedBox(width: 16),
+                ],
+              );
+            }
+
+            return Container();
+          },
         ),
         SizedBox(height: 20),
         Padding(
