@@ -32,7 +32,12 @@ class _LoadingState extends State<Loading> with SingleTickerProviderStateMixin {
     return Center(
       child: RotationTransition(
         turns: turns,
-        child: SvgWidget('assets/loading.svg'),
+        child: SizedBox(
+          height: 40,
+          child: Center(
+            child: SvgWidget('assets/loading.svg'),
+          ),
+        ),
       ),
     );
   }

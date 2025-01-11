@@ -1,16 +1,15 @@
 import 'package:flutter/material.dart';
 
-import '../../core/widgets/buttons/main_button.dart';
-import '../../core/widgets/custom_scaffold.dart';
-import '../../core/widgets/others/svg_widget.dart';
-import '../home/pages/home_page.dart';
+import '../widgets/main_button.dart';
+import '../widgets/svg_widget.dart';
+import 'home_screen.dart';
 
-class OnboardPage extends StatelessWidget {
-  const OnboardPage({super.key});
+class OnboardScreen extends StatelessWidget {
+  const OnboardScreen({super.key});
 
   @override
   Widget build(BuildContext context) {
-    return CustomScaffold(
+    return Scaffold(
       body: Column(
         children: [
           SvgWidget(
@@ -37,7 +36,7 @@ class OnboardPage extends StatelessWidget {
             onPressed: () {
               Navigator.pushAndRemoveUntil(
                 context,
-                MaterialPageRoute(builder: (context) => HomePage()),
+                MaterialPageRoute(builder: (context) => HomeScreen()),
                 (route) => false,
               );
             },

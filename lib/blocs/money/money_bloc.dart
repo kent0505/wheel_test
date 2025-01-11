@@ -19,5 +19,15 @@ class MoneyBloc extends Bloc<MoneyEvent, MoneyState> {
         isOnboard: isOnboard,
       ));
     });
+
+    on<ClearMoney>((event, emit) async {
+      final prefs = await SharedPreferences.getInstance();
+      await prefs.clear();
+
+      emit(MoneyLoaded(
+        money: 10000,
+        isOnboard: true,
+      ));
+    });
   }
 }

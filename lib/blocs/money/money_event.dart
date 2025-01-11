@@ -4,3 +4,5 @@ part of 'money_bloc.dart';
 sealed class MoneyEvent {}
 
 class LoadMoney extends MoneyEvent {}
+
+class ClearMoney extends MoneyEvent {}

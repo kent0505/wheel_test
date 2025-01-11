@@ -2,10 +2,10 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
-import 'src/blocs/menu/menu_bloc.dart';
-import 'src/blocs/money/money_bloc.dart';
-import 'src/core/config/themes.dart';
-import 'src/features/splash/splash_page.dart';
+import 'blocs/menu/menu_bloc.dart';
+import 'blocs/money/money_bloc.dart';
+import 'core/themes.dart';
+import 'screens/splash_screen.dart';
 
 Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -29,7 +29,7 @@ class MyApp extends StatelessWidget {
       child: MaterialApp(
         debugShowCheckedModeBanner: false,
         theme: theme,
-        home: SplashPage(),
+        home: SplashScreen(),
       ),
     );
   }
