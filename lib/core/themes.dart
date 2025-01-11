@@ -6,6 +6,9 @@ final theme = ThemeData(
   fontFamily: 'w600',
   brightness: Brightness.dark,
   scaffoldBackgroundColor: Color(0xff131116),
+  textSelectionTheme: TextSelectionThemeData(
+    cursorColor: Colors.white,
+  ),
   dialogTheme: const DialogTheme(
     shape: RoundedRectangleBorder(
       borderRadius: BorderRadius.all(Radius.circular(20)),

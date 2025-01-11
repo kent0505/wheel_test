@@ -1,3 +1,5 @@
+import 'dart:ui';
+
 import 'package:flutter/material.dart';
 
 import 'my_button.dart';
@@ -22,63 +24,70 @@ class DialogWidget extends StatelessWidget {
   Widget build(BuildContext context) {
     return Dialog(
       backgroundColor: Color(0xff1E1E1E).withValues(alpha: 0.75),
-      child: SizedBox(
-        height: 168,
-        width: 274,
-        child: Column(
-          children: [
-            const SizedBox(height: 16),
-            Text(
-              title,
-              style: TextStyle(
-                color: Colors.white,
-                fontSize: 16,
-                fontFamily: 'w600',
-              ),
-            ),
-            Padding(
-              padding: const EdgeInsets.symmetric(horizontal: 14),
-              child: Text(
-                description,
-                textAlign: TextAlign.center,
-                style: TextStyle(
-                  color: Colors.white,
-                  fontSize: 12,
-                  fontFamily: 'w600',
-                  height: 1.2,
-                ),
-              ),
-            ),
-            Spacer(),
-            Container(
-              height: 1,
-              color: Color(0xff545458).withValues(alpha: 0.65),
-            ),
-            Row(
+      child: ClipRRect(
+        borderRadius: BorderRadius.circular(14),
+        child: BackdropFilter(
+          filter: ImageFilter.blur(sigmaX: 20, sigmaY: 20),
+          child: SizedBox(
+            height: 168,
+            width: 274,
+            child: Column(
               children: [
-                _Button(
-                  title: 'Cancel',
-                  fontFamily: 'w400',
-                  onPressed: () {
-                    Navigator.pop(context);
-                  },
+                const SizedBox(height: 16),
+                Text(
+                  title,
+                  style: TextStyle(
+                    color: Colors.white,
+                    fontSize: 16,
+                    fontFamily: 'w600',
+                  ),
                 ),
+                const SizedBox(height: 2),
+                Padding(
+                  padding: const EdgeInsets.symmetric(horizontal: 14),
+                  child: Text(
+                    description,
+                    textAlign: TextAlign.center,
+                    style: TextStyle(
+                      color: Colors.white,
+                      fontSize: 12,
+                      fontFamily: 'w600',
+                      height: 1.2,
+                    ),
+                  ),
+                ),
+                Spacer(),
                 Container(
-                  height: 44,
-                  width: 1,
+                  height: 1,
                   color: Color(0xff545458).withValues(alpha: 0.65),
                 ),
-                _Button(
-                  title: buttonTitle,
-                  color: buttonColor,
-                  onPressed: () {
-                    Navigator.pop(context);
-                    onPressed();
-                  },
+                Row(
+                  children: [
+                    _Button(
+                      title: 'Cancel',
+                      fontFamily: 'w400',
+                      onPressed: () {
+                        Navigator.pop(context);
+                      },
+                    ),
+                    Container(
+                      height: 44,
+                      width: 1,
+                      color: Color(0xff545458).withValues(alpha: 0.65),
+                    ),
+                    _Button(
+                      title: buttonTitle,
+                      color: buttonColor,
+                      onPressed: () {
+                        Navigator.pop(context);
+                        onPressed();
+                      },
+                    ),
+                  ],
                 ),
               ],
             ),
-          ],
+          ),
         ),
       ),
     );

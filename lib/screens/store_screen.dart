@@ -1,6 +1,9 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 
+import '../blocs/money/money_bloc.dart';
 import '../core/utils.dart';
+import '../widgets/dialog_widget.dart';
 import '../widgets/main_button.dart';
 import '../widgets/svg_widget.dart';
 
@@ -9,55 +12,62 @@ class StoreScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return ListView(
-      padding: EdgeInsets.symmetric(
-        horizontal: 16,
-        vertical: 20,
-      ).copyWith(bottom: 8),
-      children: [
-        _Item(
-          id: 1,
-          title: 'Second Chance',
-          description:
-              'You get the opportunity to spin the wheel a second time. Only the second result is counted.',
-          price: 250,
-        ),
-        _Item(
-          id: 2,
-          title: 'One from Two',
-          description:
-              'You can spin the wheel twice and choose either of the two results.',
-          price: 250,
-        ),
-        _Item(
-          id: 3,
-          title: 'Block Sector',
-          description:
-              'You can "block" one unwanted sector. It will not be considered during the next spin.',
-          price: 250,
-        ),
-        _Wheel(
-          id: 1,
-          title: 'Classic Wheel',
-          price: 2500,
-          bought: true,
-          selected: true,
-        ),
-        _Wheel(
-          id: 2,
-          title: 'Diamond Wheel',
-          price: 2500,
-          bought: true,
-          selected: false,
-        ),
-        _Wheel(
-          id: 3,
-          title: 'Fire Wheel',
-          price: 2500,
-          bought: false,
-          selected: false,
-        ),
-      ],
+    return BlocBuilder<MoneyBloc, MoneyState>(
+      builder: (context, state) {
+        if (state is MoneyLoaded) {
+          return ListView(
+            padding: EdgeInsets.symmetric(
+              horizontal: 16,
+              vertical: 20,
+            ).copyWith(bottom: 8),
+            children: [
+              _Item(
+                id: 1,
+                title: 'Second Chance',
+                description:
+                    'You get the opportunity to spin the wheel a second time. Only the second result is counted.',
+                price: 250,
+              ),
+              _Item(
+                id: 2,
+                title: 'One from Two',
+                description:
+                    'You can spin the wheel twice and choose either of the two results.',
+                price: 250,
+              ),
+              _Item(
+                id: 3,
+                title: 'Block Sector',
+                description:
+                    'You can "block" one unwanted sector. It will not be considered during the next spin.',
+                price: 250,
+              ),
+              _Wheel(
+                id: 1,
+                title: 'Classic Wheel',
+                price: 2500,
+                selected: state.wheel == 1,
+              ),
+              _Wheel(
+                id: 2,
+                title: 'Diamond Wheel',
+                price: 2500,
+                bought: state.wheel2,
+                selected: state.wheel == 2,
+              ),
+              _Wheel(
+                id: 3,
+                title: 'Fire Wheel',
+                price: 2500,
+                bought: state.wheel3,
+                selected: state.wheel == 3,
+              ),
+            ],
+          );
+        }
+
+        return Container();
+      },
     );
   }
 }
@@ -128,9 +138,31 @@ class _Item extends StatelessWidget {
                   ),
                 ),
                 Spacer(),
-                MainButton(
-                  title: 'Get for \$$price',
-                  onPressed: () {},
+                BlocBuilder<MoneyBloc, MoneyState>(
+                  builder: (context, state) {
+                    return MainButton(
+                      title: 'Get for \$$price',
+                      onPressed: () {
+                        state is MoneyLoaded && state.money >= price
+                            ? context
+                                .read<MoneyBloc>()
+                                .add(BuyItem(id: id, price: price))
+                            : showDialog(
+                                context: context,
+                                builder: (context) {
+                                  return DialogWidget(
+                                    title: 'Not Enough Funds',
+                                    description:
+                                        'You don’t have enough money for this purchase. But no worries! Watch a quick ad and get \$500 for free to keep going!',
+                                    buttonTitle: 'Watch',
+                                    buttonColor: Color(0xff0A84FF),
+                                    onPressed: () {},
+                                  );
+                                },
+                              );
+                      },
+                    );
+                  },
                 ),
                 SizedBox(height: 12),
               ],
@@ -148,7 +180,7 @@ class _Wheel extends StatelessWidget {
     required this.id,
     required this.title,
     required this.price,
-    required this.bought,
+    this.bought = true,
     required this.selected,
   });
 
@@ -200,12 +232,34 @@ class _Wheel extends StatelessWidget {
                   ),
                 ),
                 Spacer(),
-                MainButton(
-                  title: selected || bought
-                      ? 'Apply'
-                      : 'Get for \$${formatNumber(price)}',
-                  isActive: !selected,
-                  onPressed: () {},
+                BlocBuilder<MoneyBloc, MoneyState>(
+                  builder: (context, state) {
+                    return MainButton(
+                      title: selected || bought
+                          ? 'Apply'
+                          : 'Get for \$${formatNumber(price)}',
+                      isActive: !selected,
+                      onPressed: () {
+                        state is MoneyLoaded && state.money >= price
+                            ? context.read<MoneyBloc>().add(bought
+                                ? SelectWheel(id: id)
+                                : BuyWheel(id: id, price: price))
+                            : showDialog(
+                                context: context,
+                                builder: (context) {
+                                  return DialogWidget(
+                                    title: 'Not Enough Funds',
+                                    description:
+                                        'You don’t have enough money for this purchase. But no worries! Watch a quick ad and get \$500 for free to keep going!',
+                                    buttonTitle: 'Watch',
+                                    buttonColor: Color(0xff0A84FF),
+                                    onPressed: () {},
+                                  );
+                                },
+                              );
+                      },
+                    );
+                  },
                 ),
                 SizedBox(height: 12),
               ],
