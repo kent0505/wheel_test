@@ -5,6 +5,12 @@ sealed class WheelState {}
 
 final class WheelInitial extends WheelState {}
 
-final class WheelSpinning extends WheelState {}
+final class WheelLoaded extends WheelState {
+  WheelLoaded({
+    required this.sectors,
+    required this.selectedSector,
+  });
 
-final class WheelStopped extends WheelState {}
+  final List<Sector> sectors;
+  final Sector selectedSector;
+}

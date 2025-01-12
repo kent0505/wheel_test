@@ -5,8 +5,8 @@ sealed class StoreEvent {}
 
 class LoadStore extends StoreEvent {}
 
-class BuyItem extends StoreEvent {
-  BuyItem({
+class BuyBonus extends StoreEvent {
+  BuyBonus({
     required this.id,
     required this.price,
   });
@@ -27,6 +27,12 @@ class BuyWheel extends StoreEvent {
 
 class SelectWheel extends StoreEvent {
   SelectWheel({required this.id});
+
+  final int id;
+}
+
+class UseBonus extends StoreEvent {
+  UseBonus({required this.id});
 
   final int id;
 }

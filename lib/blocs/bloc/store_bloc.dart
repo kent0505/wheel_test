@@ -14,7 +14,7 @@ class StoreBloc extends Bloc<StoreEvent, StoreState> {
       emit(StoreLoaded(store: store));
     });
 
-    on<BuyItem>((event, emit) async {
+    on<BuyBonus>((event, emit) async {
       Store store = await getStore();
       if (event.id == 1) {
         store.bonus1 += 1;
@@ -45,6 +45,21 @@ class StoreBloc extends Bloc<StoreEvent, StoreState> {
       Store store = await getStore();
       store.wheel = event.id;
       await saveInt('wheel', store.wheel);
+      emit(StoreLoaded(store: store));
+    });
+
+    on<UseBonus>((event, emit) async {
+      Store store = await getStore();
+      if (event.id == 1) {
+        store.bonus1 -= 1;
+        await saveInt('bonus1', store.bonus1);
+      } else if (event.id == 2) {
+        store.bonus2 -= 1;
+        await saveInt('bonus2', store.bonus2);
+      } else if (event.id == 3) {
+        store.bonus3 -= 1;
+        await saveInt('bonus3', store.bonus3);
+      }
       emit(StoreLoaded(store: store));
     });
   }

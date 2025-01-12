@@ -26,7 +26,7 @@ class MyApp extends StatelessWidget {
     return MultiBlocProvider(
       providers: [
         BlocProvider(create: (context) => MenuBloc()),
-        BlocProvider(create: (context) => WheelBloc()),
+        BlocProvider(create: (context) => WheelBloc()..add(LoadWheelSectors())),
         BlocProvider(create: (context) => StoreBloc()..add(LoadStore())),
         BlocProvider(create: (context) => MoneyBloc()..add(LoadMoney())),
       ],

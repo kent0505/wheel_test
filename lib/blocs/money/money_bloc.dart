@@ -11,6 +11,7 @@ class MoneyBloc extends Bloc<MoneyEvent, MoneyState> {
   MoneyBloc() : super(MoneyInitial()) {
     on<LoadMoney>((event, emit) async {
       Money money = await getMoney();
+      logger(money.last);
       emit(MoneyLoaded(money: money));
     });
 
@@ -23,7 +24,9 @@ class MoneyBloc extends Bloc<MoneyEvent, MoneyState> {
     on<AddMoney>((event, emit) async {
       Money money = await getMoney();
       money.money += event.amount;
+      money.last = event.amount;
       await saveDouble('money', money.money);
+      await saveDouble('last', money.last);
       emit(MoneyLoaded(money: money));
     });
   }

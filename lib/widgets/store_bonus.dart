@@ -83,7 +83,7 @@ class StoreBonus extends StatelessWidget {
                           if (state.money.money >= price) {
                             context
                                 .read<StoreBloc>()
-                                .add(BuyItem(id: id, price: price));
+                                .add(BuyBonus(id: id, price: price));
                             context
                                 .read<MoneyBloc>()
                                 .add(AddMoney(amount: -price));

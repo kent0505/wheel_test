@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 
+import '../blocs/money/money_bloc.dart';
 import 'coin_card.dart';
 import 'my_button.dart';
 
@@ -8,17 +10,11 @@ class TxtField extends StatelessWidget {
   const TxtField({
     super.key,
     required this.controller,
-    required this.hintText,
-    this.length = 6,
-    required this.money,
     required this.isActive,
     required this.onPressed,
   });
 
   final TextEditingController controller;
-  final String hintText;
-  final int length;
-  final double money;
   final bool isActive;
   final void Function(double) onPressed;
 
@@ -42,7 +38,7 @@ class TxtField extends StatelessWidget {
             keyboardType: TextInputType.number,
             readOnly: !isActive,
             inputFormatters: [
-              LengthLimitingTextInputFormatter(length),
+              LengthLimitingTextInputFormatter(6),
               FilteringTextInputFormatter.digitsOnly,
             ],
             textCapitalization: TextCapitalization.sentences,
@@ -62,7 +58,7 @@ class TxtField extends StatelessWidget {
                 vertical: 0,
                 horizontal: 52,
               ),
-              hintText: hintText,
+              hintText: '100',
               hintStyle: TextStyle(
                 color: Color(0xff4C4A51),
                 fontFamily: 'w600',
@@ -101,11 +97,20 @@ class TxtField extends StatelessWidget {
                     },
                   ),
                   SizedBox(width: 3),
-                  _Button(
-                    title: 'All',
-                    onPressed: () {
-                      double amount = double.tryParse(controller.text) ?? 0;
-                      onPressed(money - amount);
+                  BlocBuilder<MoneyBloc, MoneyState>(
+                    builder: (context, state) {
+                      if (state is MoneyLoaded) {
+                        return _Button(
+                          title: 'All',
+                          onPressed: () {
+                            double amount =
+                                double.tryParse(controller.text) ?? 0;
+                            onPressed(state.money.money - amount);
+                          },
+                        );
+                      }
+
+                      return Container();
                     },
                   ),
                   SizedBox(width: 5),

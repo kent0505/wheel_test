@@ -13,7 +13,7 @@ String formatNumber(double number) {
 String formatDouble(double value) {
   String prefix = '';
   value > 0 ? prefix = '+' : '';
-  return '$prefix $value'.replaceAll(RegExp(r'([.]*0+)(?!.*\d)'), '');
+  return '$prefix \$$value'.replaceAll(RegExp(r'([.]*0+)(?!.*\d)'), '');
 }
 
 void logger(Object message) => developer.log(message.toString());
@@ -23,9 +23,11 @@ Future<Money> getMoney() async {
   // await prefs.remove('onboard');
   // await prefs.clear();
   double money = prefs.getDouble('money') ?? 10000;
+  double last = prefs.getDouble('last') ?? 0;
   bool onboard = prefs.getBool('onboard') ?? true;
   return Money(
     money: money,
+    last: last,
     onboard: onboard,
   );
 }
