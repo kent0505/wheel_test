@@ -108,26 +108,26 @@ class _CustomAppbarState extends State<CustomAppbar> {
                               children: [
                                 SizedBox(width: 6),
                                 MoneyCard(),
-                                SizedBox(width: 16),
                                 Expanded(
                                   child: BlocBuilder<MoneyBloc, MoneyState>(
                                     builder: (context, state) {
-                                      return Text(
-                                        state is MoneyLoaded
-                                            ? formatNumber(state.money)
-                                            : '',
-                                        maxLines: 2,
-                                        overflow: TextOverflow.ellipsis,
-                                        style: TextStyle(
-                                          color: Color(0xffEFEFEF),
-                                          fontSize: 16,
-                                          fontFamily: 'w600',
+                                      return Center(
+                                        child: Text(
+                                          state is MoneyLoaded
+                                              ? formatNumber(state.money.money)
+                                              : '',
+                                          maxLines: 2,
+                                          overflow: TextOverflow.ellipsis,
+                                          style: TextStyle(
+                                            color: Color(0xffEFEFEF),
+                                            fontSize: 16,
+                                            fontFamily: 'w600',
+                                          ),
                                         ),
                                       );
                                     },
                                   ),
                                 ),
-                                SizedBox(width: 16),
                               ],
                             ),
                           ),

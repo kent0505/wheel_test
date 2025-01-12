@@ -11,14 +11,16 @@ class TxtField extends StatelessWidget {
     required this.hintText,
     this.length = 6,
     required this.money,
+    required this.isActive,
     required this.onPressed,
   });
 
   final TextEditingController controller;
   final String hintText;
   final int length;
-  final int money;
-  final void Function(int) onPressed;
+  final double money;
+  final bool isActive;
+  final void Function(double) onPressed;
 
   @override
   Widget build(BuildContext context) {
@@ -38,6 +40,7 @@ class TxtField extends StatelessWidget {
           TextField(
             controller: controller,
             keyboardType: TextInputType.number,
+            readOnly: !isActive,
             inputFormatters: [
               LengthLimitingTextInputFormatter(length),
               FilteringTextInputFormatter.digitsOnly,
@@ -101,7 +104,7 @@ class TxtField extends StatelessWidget {
                   _Button(
                     title: 'All',
                     onPressed: () {
-                      int amount = int.tryParse(controller.text) ?? 0;
+                      double amount = double.tryParse(controller.text) ?? 0;
                       onPressed(money - amount);
                     },
                   ),

@@ -18,16 +18,19 @@ class SplashScreen extends StatelessWidget {
             Future.delayed(
               const Duration(seconds: 2),
               () {
-                context.mounted
-                    ? Navigator.pushAndRemoveUntil(
-                        context,
-                        MaterialPageRoute(
-                          builder: (context) =>
-                              state.isOnboard ? OnboardScreen() : HomeScreen(),
-                        ),
-                        (route) => false,
-                      )
-                    : {};
+                if (context.mounted) {
+                  Navigator.pushAndRemoveUntil(
+                    context,
+                    MaterialPageRoute(
+                      builder: (context) {
+                        return state.money.onboard
+                            ? OnboardScreen()
+                            : HomeScreen();
+                      },
+                    ),
+                    (route) => false,
+                  );
+                }
               },
             );
           }
