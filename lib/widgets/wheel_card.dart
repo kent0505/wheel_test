@@ -3,9 +3,16 @@ import 'package:flutter/material.dart';
 import 'svg_widget.dart';
 
 class WheelCard extends StatelessWidget {
-  const WheelCard({super.key, required this.id});
+  const WheelCard({
+    super.key,
+    required this.id,
+    required this.turns,
+    required this.angle,
+  });
 
   final int id;
+  final double turns;
+  final double angle;
 
   @override
   Widget build(BuildContext context) {
@@ -27,13 +34,16 @@ class WheelCard extends StatelessWidget {
             top: -68,
             left: 0,
             right: 0,
-            child: AnimatedRotation(
-              turns: 1,
-              curve: Curves.easeInOutCirc,
-              duration: const Duration(seconds: 7),
-              child: SvgWidget(
-                'assets/wheel$id.svg',
-                height: 350,
+            child: Transform.rotate(
+              angle: angle,
+              child: AnimatedRotation(
+                turns: turns,
+                curve: Curves.easeInOutCirc,
+                duration: const Duration(seconds: 7),
+                child: SvgWidget(
+                  'assets/wheel$id.svg',
+                  height: 350,
+                ),
               ),
             ),
           ),

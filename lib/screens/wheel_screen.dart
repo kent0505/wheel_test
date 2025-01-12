@@ -28,18 +28,21 @@ class _WheelScreenState extends State<WheelScreen> {
   bool canSpin = true;
 
   List<double> angles = [
-    1, // 5 0
-    2, // 15 1
-    3, // 15 2
-    4, // 5 3
-    5, // 50 4
-    7, // 55 5
-    12, // 25 6
-    14, // 10 7
-    15, // 150 8
-    16, // 20 9
-    19, // 1 10
-    21, // 500 11
+    1, // 5
+    2, // 2.5
+    3, // 25
+    4, // 7
+    8, // 20
+    9, // -2
+    10, // 1.7
+    11, // -1.5
+    12, // 1.5
+    13, // loose
+    14, // 20
+    15, // -2
+    19, // 13
+    20, // 5
+    22, // 25
   ];
 
   int getCoins() {
@@ -47,7 +50,7 @@ class _WheelScreenState extends State<WheelScreen> {
     if (angle == 1) return 5;
     if (angle == 2) return 15;
     if (angle == 3) return 15;
-    if (angle == 4) return 5;
+    if (angle == 4) return 7;
     if (angle == 5) return 50;
     if (angle == 7) return 55;
     if (angle == 12) return 25;
@@ -59,7 +62,11 @@ class _WheelScreenState extends State<WheelScreen> {
     return 0;
   }
 
-  void getRandom() {
+  void onSpin() async {
+    setState(() {
+      turns += 5 / 1;
+      canSpin = false;
+    });
     Random random = Random();
     int randomIndex = random.nextInt(angles.length);
     Future.delayed(const Duration(seconds: 3), () {
@@ -68,30 +75,9 @@ class _WheelScreenState extends State<WheelScreen> {
         logger(angle);
       });
     });
-  }
-
-  void onSpin() async {
-    setState(() {
-      turns += 5 / 1;
-      canSpin = false;
-    });
-    getRandom();
     await Future.delayed(const Duration(seconds: 7), () async {
-      logger(getCoins());
-
-      Future.delayed(const Duration(seconds: 2), () {
-        if (mounted) {
-          // context.read<HomeBloc>().add(GetCoinsEvent());
-          // showDialog(
-          //   context: context,
-          //   barrierDismissible: false,
-          //   builder: (context) {
-          //     return WinDialog(
-          //       amount: getCoins(),
-          //     );
-          //   },
-          // );
-        }
+      setState(() {
+        canSpin = true;
       });
     });
   }
@@ -137,6 +123,8 @@ class _WheelScreenState extends State<WheelScreen> {
           builder: (context, state) {
             return WheelCard(
               id: state is MoneyLoaded ? state.wheel : 1,
+              turns: turns,
+              angle: angle,
             );
           },
         ),
@@ -226,7 +214,8 @@ class _WheelScreenState extends State<WheelScreen> {
             return MainButton(
               title: 'Place Bet',
               margin: 16,
-              isActive: state is! WheelSpinning,
+              // isActive: state is! WheelSpinning,
+              isActive: canSpin,
               onPressed: onSpin,
             );
           },
