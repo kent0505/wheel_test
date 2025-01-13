@@ -30,6 +30,7 @@ class BlockSectorDialog extends StatelessWidget {
                 SizedBox(height: 16),
                 Text(
                   'Choose one sector which you want block',
+                  textAlign: TextAlign.center,
                   style: TextStyle(
                     color: Color(0xffEFEFEF),
                     fontSize: 16,

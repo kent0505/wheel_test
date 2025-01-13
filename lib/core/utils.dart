@@ -1,4 +1,5 @@
 import 'dart:developer' as developer;
+import 'dart:ui';
 
 import 'package:intl/intl.dart';
 import 'package:shared_preferences/shared_preferences.dart';
@@ -135,3 +136,64 @@ String formatMultiplier(double value) {
 }
 
 void logger(Object message) => developer.log(message.toString());
+
+Color getColor(int id) {
+  if (currentWheel == 1) {
+    if (id == 3) return Color(0xff0d47d0);
+    if (id == 15) return Color(0xff2B2930);
+    if (id == 2) return Color(0xffFDBC17);
+    if (id == 8) return Color(0xff9ED4E9);
+    if (id == 20) return Color(0xff0d47d0);
+    if (id == 13) return Color(0xff2B2930);
+    if (id == 19) return Color(0xffFDBC17);
+    if (id == 12) return Color(0xff9ED4E9);
+    if (id == 9) return Color(0xff0d47d0);
+    if (id == 11) return Color(0xff2B2930);
+    if (id == 4) return Color(0xffFDBC17);
+    if (id == 10) return Color(0xff9ED4E9);
+  } else if (currentWheel == 2) {
+    if (id == 3) return Color(0xff2C44C3);
+    if (id == 15) return Color(0xff2B2930);
+    if (id == 2) return Color(0xff2C44C3);
+    if (id == 8) return Color(0xff3D86CA);
+    if (id == 20) return Color(0xff2C44C3);
+    if (id == 13) return Color(0xff2B2930);
+    if (id == 19) return Color(0xff2C44C3);
+    if (id == 12) return Color(0xff3D86CA);
+    if (id == 9) return Color(0xff2C44C3);
+    if (id == 11) return Color(0xff2B2930);
+    if (id == 4) return Color(0xff2C44C3);
+    if (id == 10) return Color(0xff3D86CA);
+  } else {
+    if (id == 3) return Color(0xffE08C2D);
+    if (id == 15) return Color(0xffCC1B00);
+    if (id == 2) return Color(0xffE08C2D);
+    if (id == 8) return Color(0xffCC1B00);
+    if (id == 20) return Color(0xffE08C2D);
+    if (id == 13) return Color(0xffCC1B00);
+    if (id == 19) return Color(0xffE08C2D);
+    if (id == 12) return Color(0xffCC1B00);
+    if (id == 9) return Color(0xffE08C2D);
+    if (id == 11) return Color(0xffCC1B00);
+    if (id == 4) return Color(0xffE08C2D);
+    if (id == 10) return Color(0xffCC1B00);
+  }
+  return Color(0xff0d47d0);
+}
+
+// if (currentWheel == 1) {
+//     if (id == 3 || id == 20 || id == 9) return Color(0xff0d47d0);
+//     if (id == 15 || id == 13 || id == 11) return Color(0xff2B2930);
+//     if (id == 2 || id == 19 || id == 4) return Color(0xffFDBC17);
+//     if (id == 8 || id == 12 || id == 10) return Color(0xff9ED4E9);
+//   } else if (currentWheel == 2) {
+//     if (id == 3 || id == 20 || id == 9) return Color(0xff0d47d0);
+//     if (id == 15 || id == 13 || id == 11) return Color(0xff2B2930);
+//     if (id == 2 || id == 19 || id == 4) return Color(0xffFDBC17);
+//     if (id == 8 || id == 12 || id == 10) return Color(0xff9ED4E9);
+//   } else if (currentWheel == 3) {
+//     if (id == 3 || id == 20 || id == 9) return Color(0xff0d47d0);
+//     if (id == 15 || id == 13 || id == 11) return Color(0xff2B2930);
+//     if (id == 2 || id == 19 || id == 4) return Color(0xffFDBC17);
+//     if (id == 8 || id == 12 || id == 10) return Color(0xff9ED4E9);
+//   }

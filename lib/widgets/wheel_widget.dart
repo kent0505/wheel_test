@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
 import '../blocs/money/money_bloc.dart';
+import '../core/utils.dart';
 import '../models/sector.dart';
 import 'my_button.dart';
 import 'rotated_widget.dart';
@@ -185,7 +186,7 @@ class _Sector extends StatelessWidget {
                           padding: const EdgeInsets.all(3).copyWith(top: 4),
                           child: SvgWidget(
                             'assets/sector1.svg',
-                            color: sector.color,
+                            color: getColor(sector.id),
                           ),
                         ),
                         Center(

@@ -183,11 +183,13 @@ class _WheelScreenState extends State<WheelScreen> {
   }
 
   void onAdd(double value) {
-    setState(() {
-      double amount = double.tryParse(controller.text) ?? 0;
-      amount += value;
-      controller.text = amount.toString().replaceAll('.0', '');
-    });
+    if (canSpin) {
+      setState(() {
+        double amount = double.tryParse(controller.text) ?? 0;
+        amount += value;
+        controller.text = amount.toString().replaceAll('.0', '');
+      });
+    }
   }
 
   void onClear() {

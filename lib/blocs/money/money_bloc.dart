@@ -81,6 +81,7 @@ class MoneyBloc extends Bloc<MoneyEvent, MoneyState> {
 
     on<SelectWheel>((event, emit) async {
       currentWheel = event.id;
+
       await saveInt('currentWheel', currentWheel);
       emit(MoneyLoaded(model: getModel()));
     });
@@ -102,15 +103,12 @@ class MoneyBloc extends Bloc<MoneyEvent, MoneyState> {
           id: sector.id,
           title: sector.title,
           factor: sector.factor,
-          color: sector.color,
         );
       }).toList();
       List<int> ang = angles.map((number) => number).toList();
-
       Sector model = list.firstWhere(
         (element) => element.id == event.sector.id,
       );
-
       if (event.sector.title.isNotEmpty) {
         model.title = '';
         model.factor = 0;
@@ -148,14 +146,9 @@ class MoneyBloc extends Bloc<MoneyEvent, MoneyState> {
     });
 
     on<ChooseSector>((event, emit) async {
-      if (event.sector.id == selectedRandomSector.id) {
-        selectedRandomSector = emptySector;
-      } else {
-        selectedRandomSector = event.sector;
-      }
-      // selectedRandomSector.title.isEmpty
-      //     ? selectedRandomSector = event.sector
-      //     : selectedRandomSector = emptySector;
+      event.sector.id == selectedRandomSector.id
+          ? selectedRandomSector = emptySector
+          : selectedRandomSector = event.sector;
       emit(MoneyLoaded(model: getModel()));
     });
   }
