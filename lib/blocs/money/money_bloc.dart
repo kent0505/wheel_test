@@ -1,3 +1,5 @@
+import 'dart:math';
+
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter/foundation.dart';
 
@@ -35,9 +37,7 @@ class MoneyBloc extends Bloc<MoneyEvent, MoneyState> {
     });
 
     on<RemoveLast>((event, emit) async {
-      if (last == 0) {
-        emit(MoneyLoaded(model: getModel()));
-      } else {
+      if (last != 0) {
         money += event.last < 0 ? event.last.abs() : -event.last;
         last = 0;
         lastResults.removeAt(0);
@@ -46,8 +46,8 @@ class MoneyBloc extends Bloc<MoneyEvent, MoneyState> {
         await saveInt('money', money);
         await saveInt('last', last);
         await saveStringList('lastResults', lastResults);
-        emit(MoneyLoaded(model: getModel()));
       }
+      emit(MoneyLoaded(model: getModel()));
     });
 
     on<BuyBonus>((event, emit) async {
@@ -117,27 +117,45 @@ class MoneyBloc extends Bloc<MoneyEvent, MoneyState> {
         sectors = list;
         angles = ang;
         ang.removeWhere((element) => element == model.id);
-        emit(MoneyLoaded(model: getModel()));
       } else {
         sectors = sectorsList;
-        emit(MoneyLoaded(model: getModel()));
       }
+      emit(MoneyLoaded(model: getModel()));
     });
 
     on<SelectSector>((event, emit) async {
-      if (event.sector.id == event.selectedSector.id) {
-        selectedSector = emptySector;
-        emit(MoneyLoaded(model: getModel()));
-      } else {
-        selectedSector = event.sector;
-        emit(MoneyLoaded(model: getModel()));
-      }
+      event.sector.id == event.selectedSector.id
+          ? selectedSector = emptySector
+          : selectedSector = event.sector;
+      emit(MoneyLoaded(model: getModel()));
     });
 
     on<RestoreSectors>((event, emit) async {
       sectors = sectorsList;
       selectedSector = emptySector;
       angles = anglesList;
+      emit(MoneyLoaded(model: getModel()));
+    });
+
+    on<GetRandomSector>((event, emit) async {
+      Sector sec = sectors.firstWhere((element) => element.id == event.angle);
+      randomSector1 = sec;
+      Random random = Random();
+      do {
+        randomSector2 = sectors[random.nextInt(sectors.length)];
+      } while (randomSector2.id == randomSector1.id);
+      emit(MoneyLoaded(model: getModel()));
+    });
+
+    on<ChooseSector>((event, emit) async {
+      if (event.sector.id == selectedRandomSector.id) {
+        selectedRandomSector = emptySector;
+      } else {
+        selectedRandomSector = event.sector;
+      }
+      // selectedRandomSector.title.isEmpty
+      //     ? selectedRandomSector = event.sector
+      //     : selectedRandomSector = emptySector;
       emit(MoneyLoaded(model: getModel()));
     });
   }

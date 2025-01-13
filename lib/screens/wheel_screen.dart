@@ -27,6 +27,7 @@ class WheelScreen extends StatefulWidget {
 class _WheelScreenState extends State<WheelScreen> {
   final controller = TextEditingController();
   int activeBonus = 0;
+  int lastActiveBonus = 0;
   double turns = 0.0;
   double angle = 0;
   double amount = 0;
@@ -59,9 +60,8 @@ class _WheelScreenState extends State<WheelScreen> {
         });
       });
       return;
-    } else if (activeBonus == 2) {
-      //
-    } else if (activeBonus == 3) {
+    } else if (activeBonus == 2 || activeBonus == 3) {
+      lastActiveBonus = activeBonus;
       context.read<MoneyBloc>().add(UseBonus(id: activeBonus));
       setState(() {
         activeBonus = 0;
@@ -112,6 +112,21 @@ class _WheelScreenState extends State<WheelScreen> {
         if (angle == 19) amount = 13;
         if (angle == 20) amount = 5;
         if (angle == 22) amount = 25;
+        if (lastActiveBonus == 2) {
+          if (mounted) {
+            context.read<MoneyBloc>().add(GetRandomSector(angle: angle));
+            await showDialog<Sector>(
+              context: context,
+              builder: (context) {
+                return SelectSectorDialog();
+              },
+            ).then((value) {
+              if (mounted && value != null) {
+                amount = value.factor;
+              }
+            });
+          }
+        }
         if (mounted) {
           context.read<MoneyBloc>().add(RestoreSectors());
           context.read<MoneyBloc>().add(AddMoney(
@@ -119,20 +134,6 @@ class _WheelScreenState extends State<WheelScreen> {
                 result: amount == 0 ? 'Lose' : formatMultiplier(amount),
               ));
         }
-        if (activeBonus == 2) {
-          if (mounted) {
-            await showDialog<Sector>(
-              context: context,
-              builder: (context) {
-                return SelectSectorDialog();
-              },
-            ).then((value) {
-              logger(value?.title ?? '');
-              return null;
-            });
-          }
-        }
-        logger('AAA');
         setState(() {
           display = true;
           FocusManager.instance.primaryFocus?.unfocus();

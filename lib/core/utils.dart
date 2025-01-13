@@ -18,6 +18,9 @@ bool boughtWheel2 = false;
 bool boughtWheel3 = false;
 List<Sector> sectors = sectorsList;
 Sector selectedSector = emptySector;
+Sector randomSector1 = emptySector;
+Sector randomSector2 = emptySector;
+Sector selectedRandomSector = emptySector;
 List<int> angles = [
   1, // 5
   2, // 2.5
@@ -74,7 +77,6 @@ Future<void> getData() async {
 }
 
 Model getModel() {
-  logger(lastResults.length);
   return Model(
     onboard: onboard,
     money: money,
@@ -88,6 +90,9 @@ Model getModel() {
     boughtWheel3: boughtWheel3,
     sectors: sectors,
     selectedSector: selectedSector,
+    randomSector1: randomSector1,
+    randomSector2: randomSector2,
+    selectedRandomSector: selectedRandomSector,
     angles: angles,
   );
 }

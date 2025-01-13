@@ -8,17 +8,8 @@ import 'my_button.dart';
 import 'rotated_widget.dart';
 import 'svg_widget.dart';
 
-class SelectSectorDialog extends StatefulWidget {
+class SelectSectorDialog extends StatelessWidget {
   const SelectSectorDialog({super.key});
-
-  @override
-  State<SelectSectorDialog> createState() => _SelectSectorDialogState();
-}
-
-class _SelectSectorDialogState extends State<SelectSectorDialog> {
-  Sector sector = emptySector;
-
-  void onSector(Sector value) {}
 
   @override
   Widget build(BuildContext context) {
@@ -36,66 +27,74 @@ class _SelectSectorDialogState extends State<SelectSectorDialog> {
         ),
         child: BlocBuilder<MoneyBloc, MoneyState>(
           builder: (context, state) {
-            return Stack(
-              children: [
-                Column(
-                  children: [
-                    SizedBox(height: 16),
-                    Text(
-                      'Choose one sector',
-                      style: TextStyle(
-                        color: Color(0xffEFEFEF),
-                        fontSize: 16,
-                        fontFamily: 'w600',
+            if (state is MoneyLoaded) {
+              return Stack(
+                children: [
+                  Column(
+                    children: [
+                      SizedBox(height: 16),
+                      Text(
+                        'Choose one sector',
+                        style: TextStyle(
+                          color: Color(0xffEFEFEF),
+                          fontSize: 16,
+                          fontFamily: 'w600',
+                        ),
                       ),
-                    ),
-                    Spacer(),
-                    MainButton(
-                      title: 'Apply',
-                      margin: 10,
-                      isActive: sector.title.isNotEmpty,
-                      onPressed: () {
-                        Navigator.pop(context, sector);
-                      },
-                    ),
-                    SizedBox(height: 10),
-                    MyButton(
-                      onPressed: () {
-                        Navigator.pop(context);
-                      },
-                      minSize: 52,
-                      child: Center(
-                        child: Text(
-                          'Cancel',
-                          style: TextStyle(
-                            color: Color(0xffE10606),
-                            fontSize: 16,
-                            fontFamily: 'w600',
+                      Spacer(),
+                      MainButton(
+                        title: 'Apply',
+                        margin: 10,
+                        isActive:
+                            state.model.selectedRandomSector.title.isNotEmpty,
+                        onPressed: () {
+                          Navigator.pop(
+                            context,
+                            state.model.selectedRandomSector,
+                          );
+                        },
+                      ),
+                      SizedBox(height: 10),
+                      MyButton(
+                        onPressed: () {
+                          Navigator.pop(context);
+                        },
+                        minSize: 52,
+                        child: Center(
+                          child: Text(
+                            'Cancel',
+                            style: TextStyle(
+                              color: Color(0xffE10606),
+                              fontSize: 16,
+                              fontFamily: 'w600',
+                            ),
                           ),
                         ),
                       ),
-                    ),
-                    SizedBox(height: 12),
-                  ],
-                ),
-                _Sector(
-                  active: sector.title.isNotEmpty,
-                  sector: sector,
-                  top: 50,
-                  left: 100,
-                  degree: -16,
-                  onPressed: onSector,
-                ),
-                _Sector(
-                  active: sector.title.isNotEmpty,
-                  sector: sector,
-                  top: 50,
-                  right: 100,
-                  degree: 16,
-                  onPressed: onSector,
-                ),
-              ],
-            );
+                      SizedBox(height: 12),
+                    ],
+                  ),
+                  _Sector(
+                    active: state.model.randomSector1.id ==
+                        state.model.selectedRandomSector.id,
+                    sector: state.model.randomSector1,
+                    top: 50,
+                    left: 100,
+                    degree: -16,
+                  ),
+                  _Sector(
+                    active: state.model.randomSector2.id ==
+                        state.model.selectedRandomSector.id,
+                    sector: state.model.randomSector2,
+                    top: 50,
+                    right: 100,
+                    degree: 16,
+                  ),
+                ],
+              );
+            }
+
+            return Container();
           },
         ),
       ),
@@ -111,7 +110,6 @@ class _Sector extends StatelessWidget {
     this.degree = 0,
     required this.active,
     required this.sector,
-    required this.onPressed,
   });
 
   final double? left;
@@ -120,7 +118,6 @@ class _Sector extends StatelessWidget {
   final int degree;
   final bool active;
   final Sector sector;
-  final void Function(Sector) onPressed;
 
   @override
   Widget build(BuildContext context) {
@@ -135,21 +132,15 @@ class _Sector extends StatelessWidget {
             builder: (context, state) {
               if (state is MoneyLoaded) {
                 return MyButton(
-                  onPressed: active
-                      ? () {
-                          // context.read<WheelBloc>().add(RemoveSector(sector: sector));
-                          // context.read<WheelBloc>().add(SelectSector(
-                          //       sector: sector,
-                          //       selectedSector: state.selectedSector,
-                          //     ));
-                        }
-                      : null,
+                  onPressed: () {
+                    context.read<MoneyBloc>().add(ChooseSector(sector: sector));
+                  },
                   child: SizedBox(
                     height: 116,
                     width: 84,
                     child: Stack(
                       children: [
-                        sector.id == state.model.selectedSector.id
+                        active
                             ? SvgWidget(
                                 'assets/sector1.svg',
                                 height: 116,

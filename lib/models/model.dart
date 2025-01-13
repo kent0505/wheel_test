@@ -14,6 +14,9 @@ class Model {
     required this.boughtWheel3,
     required this.sectors,
     required this.selectedSector,
+    required this.randomSector1,
+    required this.randomSector2,
+    required this.selectedRandomSector,
     required this.angles,
   });
 
@@ -33,6 +36,9 @@ class Model {
 
   List<Sector> sectors;
   Sector selectedSector;
+  Sector randomSector1;
+  Sector randomSector2;
+  Sector selectedRandomSector;
 
   List<int> angles;
 }

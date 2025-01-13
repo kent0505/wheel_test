@@ -53,3 +53,13 @@ class SelectSector extends MoneyEvent {
 }
 
 class RestoreSectors extends MoneyEvent {}
+
+class GetRandomSector extends MoneyEvent {
+  GetRandomSector({required this.angle});
+  final double angle;
+}
+
+class ChooseSector extends MoneyEvent {
+  ChooseSector({required this.sector});
+  final Sector sector;
+}
