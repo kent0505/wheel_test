@@ -20,7 +20,7 @@ class WheelWidget extends StatelessWidget {
   Widget build(BuildContext context) {
     return Container(
       height: 350,
-      width: 350,
+      width: 376,
       decoration: BoxDecoration(
         shape: BoxShape.circle,
         // color: Colors.redAccent,
@@ -170,6 +170,7 @@ class _Sector extends StatelessWidget {
                         }
                       : null,
                   child: SizedBox(
+                    // color: Colors.green,
                     height: 116,
                     width: 84,
                     child: Stack(

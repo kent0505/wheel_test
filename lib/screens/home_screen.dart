@@ -12,6 +12,7 @@ class HomeScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    // logger(MediaQuery.of(context).size.width);
     return Scaffold(
       resizeToAvoidBottomInset: false,
       body: Stack(

@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:wheel_test/core/utils.dart';
 
 import '../blocs/money/money_bloc.dart';
+import '../core/utils.dart';
 import '../models/sector.dart';
 import 'main_button.dart';
 import 'my_button.dart';

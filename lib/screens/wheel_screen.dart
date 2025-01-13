@@ -113,6 +113,7 @@ class _WheelScreenState extends State<WheelScreen> {
         if (angle == 20) amount = 5;
         if (angle == 22) amount = 25;
         if (lastActiveBonus == 2) {
+          lastActiveBonus = 0;
           if (mounted) {
             context.read<MoneyBloc>().add(GetRandomSector(angle: angle));
             await showDialog<Sector>(
@@ -202,6 +203,10 @@ class _WheelScreenState extends State<WheelScreen> {
     }
   }
 
+  void onChanged(String value) {
+    setState(() {});
+  }
+
   @override
   void dispose() {
     controller.dispose();
@@ -261,6 +266,7 @@ class _WheelScreenState extends State<WheelScreen> {
             TxtField(
               controller: controller,
               isActive: canSpin,
+              onChanged: onChanged,
               onPressed: onAdd,
             ),
             SizedBox(height: 6),

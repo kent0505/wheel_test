@@ -128,27 +128,33 @@ class _Settings extends StatelessWidget {
       ),
       child: MyButton(
         onPressed: onPressed,
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
+        child: Row(
           children: [
-            Text(
-              title,
-              style: TextStyle(
-                color: red ? Color(0xffE10606) : Color(0xffEFEFEF),
-                fontSize: 16,
-                fontFamily: 'w600',
-              ),
-            ),
             Expanded(
-              child: Text(
-                description,
-                maxLines: 2,
-                overflow: TextOverflow.ellipsis,
-                style: TextStyle(
-                  color: Color(0xff4C4A51),
-                  fontSize: 12,
-                  fontFamily: 'w600',
-                ),
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Text(
+                    title,
+                    style: TextStyle(
+                      color: red ? Color(0xffE10606) : Color(0xffEFEFEF),
+                      fontSize: 16,
+                      fontFamily: 'w600',
+                    ),
+                  ),
+                  Expanded(
+                    child: Text(
+                      description,
+                      maxLines: 2,
+                      overflow: TextOverflow.ellipsis,
+                      style: TextStyle(
+                        color: Color(0xff4C4A51),
+                        fontSize: 12,
+                        fontFamily: 'w600',
+                      ),
+                    ),
+                  ),
+                ],
               ),
             ),
           ],

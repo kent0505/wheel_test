@@ -17,7 +17,6 @@ class WheelCard extends StatelessWidget {
   Widget build(BuildContext context) {
     return Container(
       height: 296,
-      // height: 360,
       width: 360,
       margin: EdgeInsets.symmetric(horizontal: 16),
       decoration: BoxDecoration(
@@ -32,15 +31,16 @@ class WheelCard extends StatelessWidget {
         children: [
           Positioned(
             top: -68,
-            left: 0,
-            right: 0,
+            left: MediaQuery.of(context).size.width < 380 ? -18 : -10,
+            right: MediaQuery.of(context).size.width < 380 ? -18 : -10,
+            // bottom: 10,
             child: Transform.rotate(
               angle: angle,
               child: AnimatedRotation(
                 turns: turns,
                 curve: Curves.easeInOutCirc,
                 duration: const Duration(seconds: 7),
-                child: WheelWidget(active: false),
+                child: Center(child: WheelWidget(active: false)),
               ),
             ),
           ),

@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 
+import '../core/utils.dart';
 import '../widgets/main_button.dart';
 import '../widgets/svg_widget.dart';
 import 'home_screen.dart';
@@ -33,12 +34,15 @@ class OnboardScreen extends StatelessWidget {
           MainButton(
             title: 'Let’s Start ',
             margin: 16,
-            onPressed: () {
-              Navigator.pushAndRemoveUntil(
-                context,
-                MaterialPageRoute(builder: (context) => HomeScreen()),
-                (route) => false,
-              );
+            onPressed: () async {
+              await saveBool('onboard', false);
+              if (context.mounted) {
+                Navigator.pushAndRemoveUntil(
+                  context,
+                  MaterialPageRoute(builder: (context) => HomeScreen()),
+                  (route) => false,
+                );
+              }
             },
           ),
         ],

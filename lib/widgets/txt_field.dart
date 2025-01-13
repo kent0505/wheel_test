@@ -11,11 +11,13 @@ class TxtField extends StatelessWidget {
     super.key,
     required this.controller,
     required this.isActive,
+    required this.onChanged,
     required this.onPressed,
   });
 
   final TextEditingController controller;
   final bool isActive;
+  final void Function(String) onChanged;
   final void Function(double) onPressed;
 
   @override
@@ -73,6 +75,7 @@ class TxtField extends StatelessWidget {
             onTapOutside: (event) {
               FocusManager.instance.primaryFocus?.unfocus();
             },
+            onChanged: onChanged,
           ),
           Align(
             alignment: Alignment.centerRight,

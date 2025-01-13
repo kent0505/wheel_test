@@ -65,7 +65,7 @@ List<int> anglesList = [
 Future<void> getData() async {
   final prefs = await SharedPreferences.getInstance();
   // await prefs.clear();
-  onboard = prefs.getBool('onboard') ?? false;
+  onboard = prefs.getBool('onboard') ?? true;
   money = prefs.getInt('money') ?? 10000;
   last = prefs.getInt('last') ?? 0;
   lastResults = prefs.getStringList('lastResults') ?? [];
@@ -180,20 +180,3 @@ Color getColor(int id) {
   }
   return Color(0xff0d47d0);
 }
-
-// if (currentWheel == 1) {
-//     if (id == 3 || id == 20 || id == 9) return Color(0xff0d47d0);
-//     if (id == 15 || id == 13 || id == 11) return Color(0xff2B2930);
-//     if (id == 2 || id == 19 || id == 4) return Color(0xffFDBC17);
-//     if (id == 8 || id == 12 || id == 10) return Color(0xff9ED4E9);
-//   } else if (currentWheel == 2) {
-//     if (id == 3 || id == 20 || id == 9) return Color(0xff0d47d0);
-//     if (id == 15 || id == 13 || id == 11) return Color(0xff2B2930);
-//     if (id == 2 || id == 19 || id == 4) return Color(0xffFDBC17);
-//     if (id == 8 || id == 12 || id == 10) return Color(0xff9ED4E9);
-//   } else if (currentWheel == 3) {
-//     if (id == 3 || id == 20 || id == 9) return Color(0xff0d47d0);
-//     if (id == 15 || id == 13 || id == 11) return Color(0xff2B2930);
-//     if (id == 2 || id == 19 || id == 4) return Color(0xffFDBC17);
-//     if (id == 8 || id == 12 || id == 10) return Color(0xff9ED4E9);
-//   }
