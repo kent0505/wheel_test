@@ -23,7 +23,7 @@ class SplashScreen extends StatelessWidget {
                     context,
                     MaterialPageRoute(
                       builder: (context) {
-                        return state.money.onboard
+                        return state.model.onboard
                             ? OnboardScreen()
                             : HomeScreen();
                       },

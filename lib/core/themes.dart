@@ -10,6 +10,7 @@ final theme = ThemeData(
     cursorColor: Colors.white,
   ),
   dialogTheme: const DialogTheme(
+    insetPadding: EdgeInsets.symmetric(horizontal: 0),
     shape: RoundedRectangleBorder(
       borderRadius: BorderRadius.all(Radius.circular(20)),
     ),

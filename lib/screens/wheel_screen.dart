@@ -3,12 +3,14 @@ import 'dart:math';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
-import '../blocs/bloc/store_bloc.dart';
 import '../blocs/money/money_bloc.dart';
 import '../core/utils.dart';
+import '../models/sector.dart';
+import '../widgets/block_sector_dialog.dart';
 import '../widgets/dialog_widget.dart';
 import '../widgets/main_button.dart';
 import '../widgets/my_button.dart';
+import '../widgets/select_sector_dialog.dart';
 import '../widgets/txt_field.dart';
 import '../widgets/wheel_bonus_button.dart';
 import '../widgets/wheel_card.dart';
@@ -32,39 +34,23 @@ class _WheelScreenState extends State<WheelScreen> {
   bool canSpin = true;
   bool display = false;
 
-  List<double> angles = [
-    1, // 5
-    2, // 2.5
-    13, // loose
-    3, // 25
-    15, // -2
-    4, // 7
-    11, // -1.5
-    8, // 20
-    9, // -2
-    10, // 1.7
-    12, // 1.5
-    13, // loose
-    19, // 13
-    20, // 5
-    11, // -1.5
-    22, // 25
-    15, // -2
-  ];
-
-  void onSpin(double money, double last) async {
+  void onSpin(int money, int last) async {
     if (activeBonus == 1) {
-      if (last == 0) return;
-      context
-          .read<MoneyBloc>()
-          .add(RemoveLast(last: last < 0 ? last.abs() : -last));
-      context.read<StoreBloc>().add(UseBonus(id: activeBonus));
+      if (last == 0) {
+        setState(() {
+          activeBonus = 0;
+        });
+        return;
+      }
+      context.read<MoneyBloc>().add(
+            RemoveLast(id: activeBonus, last: last),
+          );
       setState(() {
-        field = 1;
         controller.clear();
+        field = 1;
         display = true;
         activeBonus = 0;
-        amount = last < 0 ? last.abs() : -last;
+        amount = last < 0 ? last.abs().toDouble() : -last.toDouble();
       });
       Future.delayed(const Duration(seconds: 2), () {
         setState(() {
@@ -73,6 +59,13 @@ class _WheelScreenState extends State<WheelScreen> {
         });
       });
       return;
+    } else if (activeBonus == 2) {
+      //
+    } else if (activeBonus == 3) {
+      context.read<MoneyBloc>().add(UseBonus(id: activeBonus));
+      setState(() {
+        activeBonus = 0;
+      });
     }
     field = double.tryParse(controller.text) ?? 0;
     if (money < field) {
@@ -91,7 +84,7 @@ class _WheelScreenState extends State<WheelScreen> {
       );
       return;
     }
-    context.read<MoneyBloc>().add(AddMoney(amount: -field));
+    context.read<MoneyBloc>().add(AddMoney(amount: -field.toInt()));
     setState(() {
       turns += 5 / 1;
       canSpin = false;
@@ -100,7 +93,7 @@ class _WheelScreenState extends State<WheelScreen> {
     int randomIndex = random.nextInt(angles.length);
     await Future.delayed(const Duration(seconds: 3), () {
       setState(() {
-        angle = angles[randomIndex];
+        angle = angles[randomIndex].toDouble();
         logger(angle);
       });
       Future.delayed(const Duration(seconds: 4), () async {
@@ -120,17 +113,32 @@ class _WheelScreenState extends State<WheelScreen> {
         if (angle == 20) amount = 5;
         if (angle == 22) amount = 25;
         if (mounted) {
+          context.read<MoneyBloc>().add(RestoreSectors());
           context.read<MoneyBloc>().add(AddMoney(
-                amount: amount * field,
+                amount: (amount * field).toInt(),
                 result: amount == 0 ? 'Lose' : formatMultiplier(amount),
               ));
         }
+        if (activeBonus == 2) {
+          if (mounted) {
+            await showDialog<Sector>(
+              context: context,
+              builder: (context) {
+                return SelectSectorDialog();
+              },
+            ).then((value) {
+              logger(value?.title ?? '');
+              return null;
+            });
+          }
+        }
+        logger('AAA');
         setState(() {
           display = true;
           FocusManager.instance.primaryFocus?.unfocus();
           activeBonus = 0;
         });
-        Future.delayed(const Duration(seconds: 2), () {
+        Future.delayed(const Duration(seconds: 2), () async {
           setState(() {
             display = false;
             canSpin = true;
@@ -140,8 +148,29 @@ class _WheelScreenState extends State<WheelScreen> {
     });
   }
 
-  void onBonus(int value) {
-    if (canSpin) {
+  void onBonus(int value) async {
+    if (activeBonus == 3) {
+      context.read<MoneyBloc>().add(RestoreSectors());
+      setState(() {
+        activeBonus = 0;
+      });
+      return;
+    }
+    if (value == 3 && canSpin) {
+      await showDialog<Sector>(
+        context: context,
+        builder: (context) {
+          return BlockSectorDialog();
+        },
+      ).then((value) {
+        if (mounted && value != null) {
+          context.read<MoneyBloc>().add(RemoveSector(sector: value));
+          setState(() {
+            activeBonus = 3;
+          });
+        }
+      });
+    } else if (canSpin) {
       setState(() {
         if (activeBonus == value) {
           activeBonus = 0;
@@ -165,6 +194,7 @@ class _WheelScreenState extends State<WheelScreen> {
       setState(() {
         activeBonus = 0;
         controller.clear();
+        context.read<MoneyBloc>().add(RestoreSectors());
       });
     }
   }
@@ -188,29 +218,29 @@ class _WheelScreenState extends State<WheelScreen> {
               angle: angle,
             ),
             SizedBox(height: 6),
-            BlocBuilder<StoreBloc, StoreState>(
+            BlocBuilder<MoneyBloc, MoneyState>(
               builder: (context, state) {
-                if (state is StoreLoaded) {
+                if (state is MoneyLoaded) {
                   return Row(
                     children: [
                       SizedBox(width: 16),
                       WheelBonusButton(
                         id: 1,
-                        amound: state.store.bonus1,
+                        amound: state.model.bonus1,
                         activeBonus: activeBonus,
                         onPressed: onBonus,
                       ),
                       SizedBox(width: 6),
                       WheelBonusButton(
                         id: 2,
-                        amound: state.store.bonus2,
+                        amound: state.model.bonus2,
                         activeBonus: activeBonus,
                         onPressed: onBonus,
                       ),
                       SizedBox(width: 6),
                       WheelBonusButton(
                         id: 3,
-                        amound: state.store.bonus3,
+                        amound: state.model.bonus3,
                         activeBonus: activeBonus,
                         onPressed: onBonus,
                       ),
@@ -241,8 +271,8 @@ class _WheelScreenState extends State<WheelScreen> {
                         activeBonus == 1,
                     onPressed: () {
                       onSpin(
-                        state.money.money,
-                        state.money.last,
+                        state.model.money,
+                        state.model.last,
                       );
                     },
                   );

@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
-import '../blocs/wheel/wheel_bloc.dart';
+import '../blocs/money/money_bloc.dart';
 import '../models/sector.dart';
 import 'my_button.dart';
 import 'rotated_widget.dart';
@@ -24,9 +24,9 @@ class WheelWidget extends StatelessWidget {
         shape: BoxShape.circle,
         // color: Colors.redAccent,
       ),
-      child: BlocBuilder<WheelBloc, WheelState>(
+      child: BlocBuilder<MoneyBloc, MoneyState>(
         builder: (context, state) {
-          if (state is WheelLoaded) {
+          if (state is MoneyLoaded) {
             return Stack(
               children: [
                 _Sector(
@@ -34,21 +34,21 @@ class WheelWidget extends StatelessWidget {
                   left: 0,
                   right: 0,
                   active: active,
-                  sector: state.sectors[0],
+                  sector: state.model.sectors[0],
                 ),
                 _Sector(
                   top: 12,
                   right: 85,
                   degree: 30,
                   active: active,
-                  sector: state.sectors[1],
+                  sector: state.model.sectors[1],
                 ),
                 _Sector(
                   top: 57,
                   right: 40,
                   degree: 30 * 2,
                   active: active,
-                  sector: state.sectors[2],
+                  sector: state.model.sectors[2],
                 ),
                 _Sector(
                   top: 0,
@@ -56,21 +56,21 @@ class WheelWidget extends StatelessWidget {
                   right: 24,
                   degree: 30 * 3,
                   active: active,
-                  sector: state.sectors[3],
+                  sector: state.model.sectors[3],
                 ),
                 _Sector(
                   bottom: 58,
                   right: 40,
                   degree: 30 * 4,
                   active: active,
-                  sector: state.sectors[4],
+                  sector: state.model.sectors[4],
                 ),
                 _Sector(
                   bottom: 12,
                   right: 84,
                   degree: 30 * 5,
                   active: active,
-                  sector: state.sectors[5],
+                  sector: state.model.sectors[5],
                 ),
                 _Sector(
                   bottom: -4,
@@ -78,21 +78,21 @@ class WheelWidget extends StatelessWidget {
                   right: 0,
                   degree: 30 * 6,
                   active: active,
-                  sector: state.sectors[6],
+                  sector: state.model.sectors[6],
                 ),
                 _Sector(
                   bottom: 12,
                   left: 84,
                   degree: 30 * 7,
                   active: active,
-                  sector: state.sectors[7],
+                  sector: state.model.sectors[7],
                 ),
                 _Sector(
                   bottom: 58,
                   left: 40,
                   degree: 30 * 8,
                   active: active,
-                  sector: state.sectors[8],
+                  sector: state.model.sectors[8],
                 ),
                 _Sector(
                   top: 0,
@@ -100,21 +100,21 @@ class WheelWidget extends StatelessWidget {
                   left: 24,
                   degree: 30 * 9,
                   active: active,
-                  sector: state.sectors[9],
+                  sector: state.model.sectors[9],
                 ),
                 _Sector(
                   top: 58,
                   left: 40,
                   degree: 30 * 10,
                   active: active,
-                  sector: state.sectors[10],
+                  sector: state.model.sectors[10],
                 ),
                 _Sector(
                   top: 12,
                   left: 84,
                   degree: 30 * 11,
                   active: active,
-                  sector: state.sectors[11],
+                  sector: state.model.sectors[11],
                 ),
               ],
             );
@@ -156,16 +156,15 @@ class _Sector extends StatelessWidget {
       child: Center(
         child: RotatedWidget(
           degree: degree,
-          child: BlocBuilder<WheelBloc, WheelState>(
+          child: BlocBuilder<MoneyBloc, MoneyState>(
             builder: (context, state) {
-              if (state is WheelLoaded) {
+              if (state is MoneyLoaded) {
                 return MyButton(
                   onPressed: active
                       ? () {
-                          // context.read<WheelBloc>().add(RemoveSector(sector: sector));
-                          context.read<WheelBloc>().add(SelectSector(
+                          context.read<MoneyBloc>().add(SelectSector(
                                 sector: sector,
-                                selectedSector: state.selectedSector,
+                                selectedSector: state.model.selectedSector,
                               ));
                         }
                       : null,
@@ -174,7 +173,7 @@ class _Sector extends StatelessWidget {
                     width: 84,
                     child: Stack(
                       children: [
-                        sector.id == state.selectedSector.id
+                        sector.id == state.model.selectedSector.id && active
                             ? SvgWidget(
                                 'assets/sector1.svg',
                                 height: 116,

@@ -6,9 +6,8 @@ sealed class MoneyState {}
 final class MoneyInitial extends MoneyState {}
 
 final class MoneyLoaded extends MoneyState {
-  MoneyLoaded({required this.money});
-
-  final Money money;
+  MoneyLoaded({required this.model});
+  final Model model;
 }
 
 class MoneyError extends MoneyState {}

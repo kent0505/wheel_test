@@ -105,7 +105,7 @@ class TxtField extends StatelessWidget {
                           onPressed: () {
                             double amount =
                                 double.tryParse(controller.text) ?? 0;
-                            onPressed(state.money.money - amount);
+                            onPressed(state.model.money - amount);
                           },
                         );
                       }

@@ -35,10 +35,10 @@ class WheelLastResults extends StatelessWidget {
                     scrollDirection: Axis.horizontal,
                     physics: BouncingScrollPhysics(),
                     padding: EdgeInsets.only(left: 16, right: 12),
-                    itemCount: state.money.results.length,
+                    itemCount: state.model.lastResults.length,
                     itemBuilder: (context, index) {
                       return _LastResult(
-                        title: state.money.results[index],
+                        title: state.model.lastResults[index],
                       );
                     },
                   );

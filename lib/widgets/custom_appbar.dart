@@ -114,7 +114,7 @@ class _CustomAppbarState extends State<CustomAppbar> {
                                       return Center(
                                         child: Text(
                                           state is MoneyLoaded
-                                              ? formatNumber(state.money.money)
+                                              ? formatNumber(state.model.money)
                                               : '',
                                           maxLines: 2,
                                           overflow: TextOverflow.ellipsis,

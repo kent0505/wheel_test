@@ -40,7 +40,7 @@ class WheelCard extends StatelessWidget {
                 turns: turns,
                 curve: Curves.easeInOutCirc,
                 duration: const Duration(seconds: 7),
-                child: WheelWidget(),
+                child: WheelWidget(active: false),
               ),
             ),
           ),

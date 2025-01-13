@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
-import '../blocs/bloc/store_bloc.dart';
 import '../blocs/money/money_bloc.dart';
 import 'dialog_widget.dart';
 import 'main_button.dart';
@@ -19,7 +18,7 @@ class StoreBonus extends StatelessWidget {
   final int id;
   final String title;
   final String description;
-  final double price;
+  final int price;
 
   @override
   Widget build(BuildContext context) {
@@ -80,13 +79,10 @@ class StoreBonus extends StatelessWidget {
                       return MainButton(
                         title: 'Get for \$$price',
                         onPressed: () {
-                          if (state.money.money >= price) {
-                            context
-                                .read<StoreBloc>()
-                                .add(BuyBonus(id: id, price: price));
+                          if (state.model.money >= price) {
                             context
                                 .read<MoneyBloc>()
-                                .add(AddMoney(amount: -price));
+                                .add(BuyBonus(id: id, price: price));
                           } else {
                             showDialog(
                               context: context,

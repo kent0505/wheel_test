@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
-import '../blocs/bloc/store_bloc.dart';
 import '../blocs/money/money_bloc.dart';
 import '../core/utils.dart';
 import 'dialog_widget.dart';
@@ -20,7 +19,7 @@ class StoreWheel extends StatelessWidget {
 
   final int id;
   final String title;
-  final double price;
+  final int price;
   final bool selected;
   final bool bought;
 
@@ -71,20 +70,17 @@ class StoreWheel extends StatelessWidget {
                     return MainButton(
                       title: selected || bought
                           ? 'Apply'
-                          : 'Get for \$${formatNumber(price.toDouble())}',
+                          : 'Get for \$${formatNumber(price)}',
                       isActive: !selected,
                       onPressed: () {
                         if (bought) {
-                          context.read<StoreBloc>().add(SelectWheel(id: id));
+                          context.read<MoneyBloc>().add(SelectWheel(id: id));
                         } else {
                           if (state is MoneyLoaded &&
-                              state.money.money >= price) {
-                            context
-                                .read<StoreBloc>()
-                                .add(BuyWheel(id: id, price: price));
+                              state.model.money >= price) {
                             context
                                 .read<MoneyBloc>()
-                                .add(AddMoney(amount: -price));
+                                .add(BuyWheel(id: id, price: price));
                           } else {
                             showDialog(
                               context: context,

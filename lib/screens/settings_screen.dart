@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
-import '../blocs/bloc/store_bloc.dart';
 import '../blocs/menu/menu_bloc.dart';
 import '../blocs/money/money_bloc.dart';
 import '../widgets/dialog_widget.dart';
@@ -81,7 +80,6 @@ class SettingsScreen extends StatelessWidget {
                   buttonTitle: 'Clear',
                   onPressed: () {
                     context.read<MoneyBloc>().add(ClearMoney());
-                    context.read<StoreBloc>().add(LoadStore());
                     context.read<MenuBloc>().add(ChangeMenu(index: 1));
                     Navigator.pushAndRemoveUntil(
                       context,

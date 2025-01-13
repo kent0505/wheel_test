@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
-import '../blocs/bloc/store_bloc.dart';
+import '../blocs/money/money_bloc.dart';
 import '../widgets/store_bonus.dart';
 import '../widgets/store_wheel.dart';
 
@@ -10,9 +10,9 @@ class StoreScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return BlocBuilder<StoreBloc, StoreState>(
+    return BlocBuilder<MoneyBloc, MoneyState>(
       builder: (context, state) {
-        if (state is StoreLoaded) {
+        if (state is MoneyLoaded) {
           return ListView(
             padding: EdgeInsets.symmetric(
               horizontal: 16,
@@ -44,21 +44,21 @@ class StoreScreen extends StatelessWidget {
                 id: 1,
                 title: 'Classic Wheel',
                 price: 2500,
-                selected: state.store.wheel == 1,
+                selected: state.model.currentWheel == 1,
               ),
               StoreWheel(
                 id: 2,
                 title: 'Diamond Wheel',
                 price: 2500,
-                selected: state.store.wheel == 2,
-                bought: state.store.wheel2,
+                selected: state.model.currentWheel == 2,
+                bought: state.model.boughtWheel2,
               ),
               StoreWheel(
                 id: 3,
                 title: 'Fire Wheel',
                 price: 2500,
-                selected: state.store.wheel == 3,
-                bought: state.store.wheel3,
+                selected: state.model.currentWheel == 3,
+                bought: state.model.boughtWheel3,
               ),
             ],
           );
