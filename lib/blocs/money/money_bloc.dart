@@ -27,7 +27,27 @@ class MoneyBloc extends Bloc<MoneyEvent, MoneyState> {
       money.last = event.amount;
       await saveDouble('money', money.money);
       await saveDouble('last', money.last);
+      if (event.result.isNotEmpty) {
+        if (money.results.length > 10) money.results.removeLast();
+        money.results.insert(0, event.result);
+        await saveStringList('results', money.results);
+      }
       emit(MoneyLoaded(money: money));
+    });
+
+    on<RemoveLast>((event, emit) async {
+      Money money = await getMoney();
+      if (money.last == 0) {
+        emit(MoneyLoaded(money: money));
+      } else {
+        money.money += event.last;
+        money.last = 0;
+        money.results.removeAt(0);
+        await saveDouble('money', money.money);
+        await saveDouble('last', money.last);
+        await saveStringList('results', money.results);
+        emit(MoneyLoaded(money: money));
+      }
     });
   }
 }

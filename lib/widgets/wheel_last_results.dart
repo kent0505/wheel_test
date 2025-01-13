@@ -1,4 +1,7 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
+
+import '../blocs/money/money_bloc.dart';
 
 class WheelLastResults extends StatelessWidget {
   const WheelLastResults({super.key});
@@ -25,20 +28,24 @@ class WheelLastResults extends StatelessWidget {
           Spacer(),
           SizedBox(
             height: 30,
-            child: ListView(
-              scrollDirection: Axis.horizontal,
-              physics: BouncingScrollPhysics(),
-              padding: EdgeInsets.only(left: 16, right: 12),
-              children: [
-                _LastResult(title: 'x2'),
-                _LastResult(title: 'Lose'),
-                _LastResult(title: 'x2'),
-                _LastResult(title: 'x2'),
-                _LastResult(title: 'x2'),
-                _LastResult(title: 'x2'),
-                _LastResult(title: 'x2'),
-                _LastResult(title: 'x2'),
-              ],
+            child: BlocBuilder<MoneyBloc, MoneyState>(
+              builder: (context, state) {
+                if (state is MoneyLoaded) {
+                  return ListView.builder(
+                    scrollDirection: Axis.horizontal,
+                    physics: BouncingScrollPhysics(),
+                    padding: EdgeInsets.only(left: 16, right: 12),
+                    itemCount: state.money.results.length,
+                    itemBuilder: (context, index) {
+                      return _LastResult(
+                        title: state.money.results[index],
+                      );
+                    },
+                  );
+                }
+
+                return Container();
+              },
             ),
           ),
         ],

@@ -11,9 +11,16 @@ String formatNumber(double number) {
 }
 
 String formatDouble(double value) {
-  String prefix = '';
-  value > 0 ? prefix = '+' : '';
-  return '$prefix \$$value'.replaceAll(RegExp(r'([.]*0+)(?!.*\d)'), '');
+  if (value == 0) return 'Lose';
+  String formattedValue =
+      value.abs().toStringAsFixed(value.truncateToDouble() == value ? 0 : 1);
+  return value < 0 ? '- \$$formattedValue' : '+ \$$formattedValue';
+}
+
+String formatMultiplier(double value) {
+  String formattedValue =
+      value.abs().toStringAsFixed(value.truncateToDouble() == value ? 0 : 1);
+  return value < 0 ? '-x$formattedValue' : 'x$formattedValue';
 }
 
 void logger(Object message) => developer.log(message.toString());
@@ -25,10 +32,12 @@ Future<Money> getMoney() async {
   double money = prefs.getDouble('money') ?? 10000;
   double last = prefs.getDouble('last') ?? 0;
   bool onboard = prefs.getBool('onboard') ?? true;
+  List<String> results = prefs.getStringList('results') ?? [];
   return Money(
     money: money,
     last: last,
     onboard: onboard,
+    results: results,
   );
 }
 
@@ -68,4 +77,9 @@ Future<void> saveDouble(String key, double value) async {
 Future<void> saveBool(String key, bool value) async {
   final prefs = await SharedPreferences.getInstance();
   await prefs.setBool(key, value);
+}
+
+Future<void> saveStringList(String key, List<String> value) async {
+  final prefs = await SharedPreferences.getInstance();
+  await prefs.setStringList(key, value);
 }

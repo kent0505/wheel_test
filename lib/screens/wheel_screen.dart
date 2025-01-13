@@ -54,10 +54,10 @@ class _WheelScreenState extends State<WheelScreen> {
 
   void onSpin(double money, double last) async {
     if (activeBonus == 1) {
-      logger(last.abs());
+      if (last == 0) return;
       context
           .read<MoneyBloc>()
-          .add(AddMoney(amount: last < 0 ? last.abs() : -last));
+          .add(RemoveLast(last: last < 0 ? last.abs() : -last));
       context.read<StoreBloc>().add(UseBonus(id: activeBonus));
       setState(() {
         field = 1;
@@ -120,7 +120,10 @@ class _WheelScreenState extends State<WheelScreen> {
         if (angle == 20) amount = 5;
         if (angle == 22) amount = 25;
         if (mounted) {
-          context.read<MoneyBloc>().add(AddMoney(amount: amount * field));
+          context.read<MoneyBloc>().add(AddMoney(
+                amount: amount * field,
+                result: amount == 0 ? 'Lose' : formatMultiplier(amount),
+              ));
         }
         setState(() {
           display = true;
